@@ -58,7 +58,7 @@ class MethodTool extends Tool
         
         return [
             'type' => 'object',
-            'properties' => $properties,
+            'properties' => empty($properties) ? (object)[] : $properties,
             'required' => $required,
         ];
     }
