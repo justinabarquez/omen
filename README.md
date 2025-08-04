@@ -5,14 +5,14 @@ An AI agent framework for Laravel applications.
 ## Installation
 
 ```bash
-composer require omenphp/omen
+composer require omenphp/agent
 ```
 
 ## Quick Start
 
 1. **Install the package:**
    ```bash
-   composer require omenphp/omen
+   composer require omenphp/agent
    ```
 
 2. **Run the agent:**

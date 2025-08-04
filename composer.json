@@ -1,5 +1,5 @@
 {
-    "name": "omenphp/omen",
+    "name": "omenphp/agent",
     "description": "AI Agent framework for Laravel",
     "type": "library",
     "license": "MIT",
