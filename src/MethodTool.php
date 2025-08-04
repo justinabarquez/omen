@@ -63,8 +63,16 @@ class MethodTool extends Tool
         ];
     }
 
-    public function execute(array $input)
+    public function execute($input)
     {
+        // Ensure input is always an array
+        if ($input === null) {
+            $input = [];
+        }
+        if (!is_array($input)) {
+            throw new \InvalidArgumentException("Tool input must be an array or null");
+        }
+        
         if ($this->parameters === null) {
             $this->extractParameters();
         }
