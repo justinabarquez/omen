@@ -38,7 +38,7 @@ class ChatCommand extends Command
 
     protected function loadTools(): void
     {
-        $toolsPath = base_path('agent/Tools');
+        $toolsPath = base_path('app/Agent/Tools');
         if (!is_dir($toolsPath)) {
             return;
         }
@@ -47,7 +47,7 @@ class ChatCommand extends Command
         $files = glob($toolsPath . '/*.php');
 
         foreach ($files as $file) {
-            $className = 'Agent\\Tools\\' . basename($file, '.php');
+            $className = 'App\\Agent\\Tools\\' . basename($file, '.php');
 
             if (class_exists($className)) {
                 try {

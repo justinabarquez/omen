@@ -33,22 +33,22 @@ class InstallCommand extends Command
         $this->comment('Next steps:');
         $this->line('1. Add your ANTHROPIC_API_KEY to your .env file');
         $this->line('2. Run: php artisan omen');
-        $this->line('3. Create custom tools in agent/Tools/');
+        $this->line('3. Create custom tools in app/Agent/Tools/');
     }
 
     protected function createDirectories()
     {
-        $agentPath = base_path('agent');
-        $toolsPath = base_path('agent/Tools');
+        $agentPath = base_path('app/Agent');
+        $toolsPath = base_path('app/Agent/Tools');
 
         if (!$this->files->isDirectory($agentPath)) {
             $this->files->makeDirectory($agentPath, 0755, true);
-            $this->line('✅ Created agent/ directory');
+            $this->line('✅ Created app/Agent/ directory');
         }
 
         if (!$this->files->isDirectory($toolsPath)) {
             $this->files->makeDirectory($toolsPath, 0755, true);
-            $this->line('✅ Created agent/Tools/ directory');
+            $this->line('✅ Created app/Agent/Tools/ directory');
         }
     }
 
@@ -74,17 +74,17 @@ class InstallCommand extends Command
 
     protected function createReadFileToolStub()
     {
-        $toolPath = base_path('agent/Tools/ReadFile.php');
+        $toolPath = base_path('app/Agent/Tools/ReadFile.php');
 
         if ($this->files->exists($toolPath)) {
-            if (!$this->confirm('agent/Tools/ReadFile.php already exists. Overwrite?')) {
+            if (!$this->confirm('app/Agent/Tools/ReadFile.php already exists. Overwrite?')) {
                 return;
             }
         }
 
         $stub = $this->getReadFileToolStub();
         $this->files->put($toolPath, $stub);
-        $this->line('✅ Created agent/Tools/ReadFile.php');
+        $this->line('✅ Created app/Agent/Tools/ReadFile.php');
     }
 
     protected function getBootstrapStub(): string
@@ -94,7 +94,7 @@ class InstallCommand extends Command
 
 use Omen\Agent;
 use Omen\Model;
-use Agent\Tools\ReadFile;
+use App\Agent\Tools\ReadFile;
 
 return Agent::configure()
     ->withModel(Model::Anthropic, 'claude-3-5-sonnet-20241022')
@@ -111,7 +111,7 @@ PHP;
         return <<<'PHP'
 <?php
 
-namespace Agent\Tools;
+namespace App\Agent\Tools;
 
 use Omen\Tool;
 use Omen\Attributes\Description;
