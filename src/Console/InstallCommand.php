@@ -32,7 +32,7 @@ class InstallCommand extends Command
         $this->newLine();
         $this->comment('Next steps:');
         $this->line('1. Add your ANTHROPIC_API_KEY to your .env file');
-        $this->line('2. Run: php artisan omen:chat');
+        $this->line('2. Run: php artisan omen');
         $this->line('3. Create custom tools in agent/Tools/');
     }
 

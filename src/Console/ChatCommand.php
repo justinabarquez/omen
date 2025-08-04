@@ -7,7 +7,7 @@ use Omen\Agent;
 
 class ChatCommand extends Command
 {
-    protected $signature = 'omen:chat';
+    protected $signature = 'omen';
     protected $description = 'Start a chat session with your AI agent';
 
     protected Agent $agent;
