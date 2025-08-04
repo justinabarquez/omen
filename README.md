@@ -15,20 +15,16 @@ composer require omenphp/omen
    composer require omenphp/omen
    ```
 
-2. **Set up your agent:**
-   ```bash
-   php artisan agent:install
-   ```
-
-3. **Add your API key to `.env`:**
-   ```env
-   ANTHROPIC_API_KEY=your_api_key_here
-   ```
-
-4. **Start chatting:**
+2. **Run the agent:**
    ```bash
    php artisan agent
    ```
+   
+   The first time you run this command, it will:
+   - Prompt you to set up the agent structure
+   - Ask for your Anthropic API key
+   - Create the necessary files and directories
+   - Start the chat session
 
 ## Usage
 
@@ -58,7 +54,7 @@ class GetWeather extends Tool
 
 ### Configuration
 
-The `bootstrap/agent.php` file is automatically created with `agent:install`:
+The `bootstrap/agent.php` file is automatically created when you first run `php artisan agent`:
 
 ```php
 <?php
@@ -90,8 +86,7 @@ echo $response->content;
 
 ## Commands
 
-- `php artisan agent:install` - Set up the agent structure
-- `php artisan agent` - Start interactive chat with your AI agent
+- `php artisan agent` - Start interactive chat with your AI agent (auto-installs on first run)
 
 ## Features
 

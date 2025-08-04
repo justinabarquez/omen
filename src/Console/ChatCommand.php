@@ -3,6 +3,7 @@
 namespace Omen\Console;
 
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
 use Omen\Agent;
 
 class ChatCommand extends Command
@@ -11,29 +12,229 @@ class ChatCommand extends Command
     protected $description = 'Start a chat session with your AI agent';
 
     protected Agent $agent;
+    protected Filesystem $files;
+
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct();
+        $this->files = $files;
+    }
 
     public function handle()
     {
+        // Check if installation is needed
+        if ($this->needsInstallation()) {
+            if (!$this->performInstallation()) {
+                return 1;
+            }
+        }
+
+        // Check API key
+        if (!$this->hasApiKey()) {
+            if (!$this->promptForApiKey()) {
+                return 1;
+            }
+        }
+
         $this->info('🔮 Omen AI Agent');
         $this->info('Type "exit" to quit, "clear" to reset conversation');
         $this->info('────────────────────────────────────────────────');
         $this->newLine();
 
         // Load agent configuration
-        $configFile = base_path('bootstrap/agent.php');
-        if (!file_exists($configFile)) {
-            $this->error('❌ No agent configuration found.');
-            $this->comment('Run "php artisan agent:install" first to set up your agent.');
-            return 1;
-        }
-
-        $this->agent = require $configFile;
+        $this->agent = require base_path('bootstrap/agent.php');
         
         // Load tools dynamically
         $this->loadTools();
 
         $this->chatLoop();
         return 0;
+    }
+
+    protected function needsInstallation(): bool
+    {
+        return !file_exists(base_path('bootstrap/agent.php')) || 
+               !is_dir(base_path('app/Agent/Tools'));
+    }
+
+    protected function performInstallation(): bool
+    {
+        $this->newLine();
+        $this->info('🔧 Agent Setup Required');
+        $this->comment('It looks like this is your first time using the agent.');
+        $this->newLine();
+
+        if (!$this->confirm('Would you like to set up the agent in your application?', true)) {
+            $this->comment('Setup cancelled. You can run this command again anytime.');
+            return false;
+        }
+
+        $this->newLine();
+        $this->info('Setting up Omen AI Agent...');
+        $this->newLine();
+
+        $this->createDirectories();
+        $this->createBootstrapFile();
+        $this->createReadFileToolStub();
+
+        $this->info('✅ Agent setup completed successfully!');
+        $this->newLine();
+
+        return true;
+    }
+
+    protected function hasApiKey(): bool
+    {
+        return !empty(env('ANTHROPIC_API_KEY'));
+    }
+
+    protected function promptForApiKey(): bool
+    {
+        $this->newLine();
+        $this->info('🔑 API Key Required');
+        $this->comment('You need an Anthropic API key to use the agent.');
+        $this->newLine();
+
+        $apiKey = $this->ask('Please enter your Anthropic API key');
+
+        if (empty($apiKey)) {
+            $this->error('API key is required to continue.');
+            return false;
+        }
+
+        if (!$this->addApiKeyToEnv($apiKey)) {
+            $this->error('Failed to save API key to .env file.');
+            return false;
+        }
+
+        $this->info('✅ API key saved successfully!');
+        $this->newLine();
+
+        return true;
+    }
+
+    protected function addApiKeyToEnv(string $apiKey): bool
+    {
+        $envPath = base_path('.env');
+        
+        if (!file_exists($envPath)) {
+            $this->warn('.env file not found. Creating one...');
+            $this->files->put($envPath, '');
+        }
+
+        $envContent = $this->files->get($envPath);
+        
+        // Check if ANTHROPIC_API_KEY already exists
+        if (str_contains($envContent, 'ANTHROPIC_API_KEY=')) {
+            // Replace existing key
+            $envContent = preg_replace(
+                '/^ANTHROPIC_API_KEY=.*$/m',
+                "ANTHROPIC_API_KEY={$apiKey}",
+                $envContent
+            );
+        } else {
+            // Add new key
+            $envContent .= "\nANTHROPIC_API_KEY={$apiKey}\n";
+        }
+
+        return $this->files->put($envPath, $envContent) !== false;
+    }
+
+    protected function createDirectories(): void
+    {
+        $agentPath = base_path('app/Agent');
+        $toolsPath = base_path('app/Agent/Tools');
+
+        if (!$this->files->isDirectory($agentPath)) {
+            $this->files->makeDirectory($agentPath, 0755, true);
+            $this->line('✅ Created app/Agent/ directory');
+        }
+
+        if (!$this->files->isDirectory($toolsPath)) {
+            $this->files->makeDirectory($toolsPath, 0755, true);
+            $this->line('✅ Created app/Agent/Tools/ directory');
+        }
+    }
+
+    protected function createBootstrapFile(): void
+    {
+        $bootstrapPath = base_path('bootstrap/agent.php');
+
+        if ($this->files->exists($bootstrapPath)) {
+            if (!$this->confirm('bootstrap/agent.php already exists. Overwrite?', false)) {
+                return;
+            }
+        }
+
+        $stub = $this->getBootstrapStub();
+        $this->files->put($bootstrapPath, $stub);
+        $this->line('✅ Created bootstrap/agent.php');
+    }
+
+    protected function createReadFileToolStub(): void
+    {
+        $toolPath = base_path('app/Agent/Tools/ReadFile.php');
+
+        if ($this->files->exists($toolPath)) {
+            if (!$this->confirm('app/Agent/Tools/ReadFile.php already exists. Overwrite?', false)) {
+                return;
+            }
+        }
+
+        $stub = $this->getReadFileToolStub();
+        $this->files->put($toolPath, $stub);
+        $this->line('✅ Created app/Agent/Tools/ReadFile.php');
+    }
+
+    protected function getBootstrapStub(): string
+    {
+        return <<<'PHP'
+<?php
+
+use Omen\Agent;
+use Omen\Model;
+use App\Agent\Tools\ReadFile;
+
+return Agent::configure()
+    ->withModel(Model::Anthropic, 'claude-3-5-sonnet-20241022')
+    ->withSystemMessage('You are a helpful assistant that can read files and answer questions.')
+    ->withTools([
+        new ReadFile,
+    ])
+    ->create();
+PHP;
+    }
+
+    protected function getReadFileToolStub(): string
+    {
+        return <<<'PHP'
+<?php
+
+namespace App\Agent\Tools;
+
+use Omen\Tool;
+use Omen\Attributes\Description;
+
+#[Description('Read the contents of a file at the given path')]
+class ReadFile extends Tool
+{
+    public function handle(
+        #[Description('The path to the file to read (e.g., "composer.json", "README.md")')] string $path
+    ) {
+        $fullPath = base_path($path);
+        
+        if (!file_exists($fullPath)) {
+            throw new \Exception("File not found: {$path}");
+        }
+        
+        if (!is_readable($fullPath)) {
+            throw new \Exception("File is not readable: {$path}");
+        }
+        
+        return file_get_contents($fullPath);
+    }
+}
+PHP;
     }
 
     protected function loadTools(): void

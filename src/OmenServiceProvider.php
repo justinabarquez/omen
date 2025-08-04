@@ -3,7 +3,6 @@
 namespace Omen;
 
 use Illuminate\Support\ServiceProvider;
-use Omen\Console\InstallCommand;
 use Omen\Console\ChatCommand;
 
 class OmenServiceProvider extends ServiceProvider
@@ -17,7 +16,6 @@ class OmenServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                InstallCommand::class,
                 ChatCommand::class,
             ]);
         }
