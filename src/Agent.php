@@ -185,7 +185,15 @@ class Agent
         
         // Add the assistant's message with all content (text + tool uses)
         if (!empty($assistantContent)) {
-            $this->addAssistantMessage($assistantContent);
+            // Normalize tool_use inputs to ensure they're always objects, not null
+            $normalizedContent = array_map(function($content) {
+                if ($content['type'] === 'tool_use' && $content['input'] === null) {
+                    $content['input'] = new \stdClass(); // Empty object
+                }
+                return $content;
+            }, $assistantContent);
+            
+            $this->addAssistantMessage($normalizedContent);
         }
         
         // Execute tools and add results if there were tool calls
