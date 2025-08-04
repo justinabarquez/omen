@@ -358,16 +358,39 @@ PHP;
                     }
                 }
 
-                $this->newLine();
-                $this->comment('⏳ Continuing with tool results...');
-
-                $continuedResponse = $this->agent->continueWithToolResults();
-
-                if ($continuedResponse->content) {
+                // Continue with tool results until no more tools are needed
+                $continueCount = 1;
+                do {
                     $this->newLine();
-                    $this->line('<fg=cyan>Assistant (continued):</fg=cyan>');
-                    $this->line($continuedResponse->content);
-                }
+                    $this->comment("⏳ Continuing with tool results... ($continueCount)");
+
+                    $continuedResponse = $this->agent->continueWithToolResults();
+
+                    if ($continuedResponse->content) {
+                        $this->newLine();
+                        $this->line('<fg=cyan>Assistant (continued):</fg=cyan>');
+                        $this->line($continuedResponse->content);
+                    }
+
+                    // If there are more tool calls, execute them
+                    if ($continuedResponse->hasToolCalls()) {
+                        $this->newLine();
+                        $this->comment('🔧 Using more tools...');
+
+                        foreach ($continuedResponse->toolResults as $index => $result) {
+                            $toolCall = $continuedResponse->toolCalls[$index];
+                            $this->line("<fg=yellow>Tool:</fg=yellow> {$toolCall['name']}");
+
+                            if ($result['is_error']) {
+                                $this->error("❌ Error: {$result['content']}");
+                            } else {
+                                $this->comment('✅ Result: ' . $this->truncateOutput($result['content']));
+                            }
+                        }
+                    }
+
+                    $continueCount++;
+                } while ($continuedResponse->hasToolCalls() && $continueCount <= 5); // Limit to prevent infinite loops
             }
 
             $this->newLine();

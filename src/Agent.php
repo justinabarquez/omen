@@ -187,8 +187,8 @@ class Agent
         if (!empty($assistantContent)) {
             // Normalize tool_use inputs to ensure they're always objects, not null
             $normalizedContent = array_map(function($content) {
-                if ($content['type'] === 'tool_use' && ($content['input'] === null || empty($content['input']))) {
-                    $content['input'] = []; // Empty array that will serialize as {}
+                if ($content['type'] === 'tool_use' && ($content['input'] === null || (is_array($content['input']) && empty($content['input'])))) {
+                    $content['input'] = (object)[]; // Empty object that will serialize as {}
                 }
                 return $content;
             }, $assistantContent);
