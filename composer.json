@@ -1,0 +1,23 @@
+{
+    "name": "omenphp/omen",
+    "description": "AI Agent framework for Laravel",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Caleb Porzio"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^12.0",
+        "illuminate/console": "^12.0",
+        "illuminate/http": "^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Omen\\": "src/"
+        }
+    }
+}
