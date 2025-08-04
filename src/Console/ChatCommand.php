@@ -85,6 +85,11 @@ class ChatCommand extends Command
 
     protected function hasApiKey(): bool
     {
+        // Refresh the environment after potential .env changes
+        if (function_exists('app')) {
+            app('config')->offsetUnset('app.env');
+        }
+        
         return !empty(env('ANTHROPIC_API_KEY'));
     }
 
@@ -106,6 +111,9 @@ class ChatCommand extends Command
             $this->error('Failed to save API key to .env file.');
             return false;
         }
+
+        // Reload environment variables
+        $this->reloadEnvironment();
 
         $this->info('✅ API key saved successfully!');
         $this->newLine();
@@ -138,6 +146,16 @@ class ChatCommand extends Command
         }
 
         return $this->files->put($envPath, $envContent) !== false;
+    }
+
+    protected function reloadEnvironment(): void
+    {
+        // Clear Laravel's cached environment
+        if (function_exists('app')) {
+            app()->bootstrapWith([
+                \Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables::class
+            ]);
+        }
     }
 
     protected function createDirectories(): void

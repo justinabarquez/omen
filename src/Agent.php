@@ -10,7 +10,7 @@ class Agent
     protected array $tools = [];
     protected string $model = 'claude-3-5-sonnet-20241022';
     protected string $provider = 'anthropic';
-    protected string $apiKey;
+    protected ?string $apiKey;
     protected int $maxTokens = 4096;
     protected ?string $systemMessage = null;
 
