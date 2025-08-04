@@ -19,5 +19,12 @@
         "psr-4": {
             "Omen\\": "src/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Omen\\OmenServiceProvider"
+            ]
+        }
     }
 }
