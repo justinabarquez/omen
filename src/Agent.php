@@ -229,10 +229,16 @@ class Agent
     {
         $content = [];
         foreach ($toolResults as $result) {
+            // Ensure content is always a string for the API
+            $resultContent = $result['content'];
+            if (is_array($resultContent) || is_object($resultContent)) {
+                $resultContent = json_encode($resultContent);
+            }
+            
             $content[] = [
                 'type' => 'tool_result',
                 'tool_use_id' => $result['tool_use_id'],
-                'content' => $result['content'],
+                'content' => (string) $resultContent,
                 'is_error' => $result['is_error'] ?? false,
             ];
         }
