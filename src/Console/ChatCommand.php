@@ -5,6 +5,7 @@ namespace Omen\Console;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Omen\Agent;
+use Omen\MethodTool;
 
 class ChatCommand extends Command
 {
@@ -270,9 +271,28 @@ PHP;
 
             if (class_exists($className)) {
                 try {
-                    $tool = new $className();
-                    if ($tool instanceof \Omen\Tool) {
-                        $tools[] = $tool;
+                    $toolInstance = new $className();
+                    if ($toolInstance instanceof \Omen\Tool) {
+                        // Check if this tool uses the single handle() method pattern
+                        if (method_exists($toolInstance, 'handle')) {
+                            $tools[] = $toolInstance;
+                        } else {
+                            // Multi-method pattern - create separate tools for each method
+                            $reflection = new \ReflectionClass($toolInstance);
+                            foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                                // Skip constructor and inherited methods
+                                if ($method->getName() === '__construct' || 
+                                    $method->getDeclaringClass()->getName() !== $className) {
+                                    continue;
+                                }
+
+                                // Check if method has Description attribute
+                                $attributes = $method->getAttributes(\Omen\Attributes\Description::class);
+                                if (!empty($attributes)) {
+                                    $tools[] = new MethodTool($toolInstance, $method);
+                                }
+                            }
+                        }
                     }
                 } catch (\Exception $e) {
                     $this->warn("Could not load tool {$className}: " . $e->getMessage());
