@@ -383,8 +383,16 @@ PHP;
         }
     }
 
-    protected function truncateOutput(string $output, int $maxLength = 500): string
+    protected function truncateOutput($output, int $maxLength = 500): string
     {
+        // Convert array/object to JSON string
+        if (is_array($output) || is_object($output)) {
+            $output = json_encode($output, JSON_PRETTY_PRINT);
+        }
+        
+        // Ensure we have a string
+        $output = (string) $output;
+        
         if (strlen($output) <= $maxLength) {
             return $output;
         }
