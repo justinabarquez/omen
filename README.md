@@ -5,19 +5,19 @@ An AI agent framework for Laravel applications.
 ## Installation
 
 ```bash
-composer require omenphp/agent
+composer require omenphp/omen
 ```
 
 ## Quick Start
 
 1. **Install the package:**
    ```bash
-   composer require omenphp/agent
+   composer require omenphp/omen
    ```
 
 2. **Run the agent:**
    ```bash
-   php artisan agent
+   php artisan omen
    ```
    
    The first time you run this command, it will:
@@ -35,7 +35,7 @@ Tools use PHP attributes for clean, minimal configuration:
 ```php
 <?php
 
-namespace App\Agent\Tools;
+namespace App\Omen\Tools;
 
 use Omen\Tool;
 use Omen\Attributes\Description;
@@ -54,14 +54,14 @@ class GetWeather extends Tool
 
 ### Configuration
 
-The `bootstrap/agent.php` file is automatically created when you first run `php artisan agent`:
+The `bootstrap/omen.php` file is automatically created when you first run `php artisan omen`:
 
 ```php
 <?php
 
 use Omen\Agent;
 use Omen\Model;
-use App\Agent\Tools\ReadFile;
+use App\Omen\Tools\ReadFile;
 
 return Agent::configure()
     ->withModel(Model::Anthropic, 'claude-3-5-sonnet-20241022')
@@ -76,7 +76,7 @@ return Agent::configure()
 ### Programmatic Usage
 
 ```php
-$agent = require 'bootstrap/agent.php';
+$agent = require 'bootstrap/omen.php';
 
 $agent->addUserMessage('What time is it?');
 $response = $agent->send();
@@ -86,7 +86,7 @@ echo $response->content;
 
 ## Commands
 
-- `php artisan agent` - Start interactive chat with your AI agent (auto-installs on first run)
+- `php artisan omen` - Start interactive chat with your AI agent (auto-installs on first run)
 
 ## Features
 

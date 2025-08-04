@@ -8,7 +8,7 @@ use Omen\Agent;
 
 class ChatCommand extends Command
 {
-    protected $signature = 'agent';
+    protected $signature = 'omen';
     protected $description = 'Start a chat session with your AI agent';
 
     protected Agent $agent;
@@ -42,7 +42,7 @@ class ChatCommand extends Command
         $this->newLine();
 
         // Load agent configuration
-        $this->agent = require base_path('bootstrap/agent.php');
+        $this->agent = require base_path('bootstrap/omen.php');
         
         // Load tools dynamically
         $this->loadTools();
@@ -53,8 +53,8 @@ class ChatCommand extends Command
 
     protected function needsInstallation(): bool
     {
-        return !file_exists(base_path('bootstrap/agent.php')) || 
-               !is_dir(base_path('app/Agent/Tools'));
+        return !file_exists(base_path('bootstrap/omen.php')) || 
+               !is_dir(base_path('app/Omen/Tools'));
     }
 
     protected function performInstallation(): bool
@@ -160,48 +160,48 @@ class ChatCommand extends Command
 
     protected function createDirectories(): void
     {
-        $agentPath = base_path('app/Agent');
-        $toolsPath = base_path('app/Agent/Tools');
+        $omenPath = base_path('app/Omen');
+        $toolsPath = base_path('app/Omen/Tools');
 
-        if (!$this->files->isDirectory($agentPath)) {
-            $this->files->makeDirectory($agentPath, 0755, true);
-            $this->line('✅ Created app/Agent/ directory');
+        if (!$this->files->isDirectory($omenPath)) {
+            $this->files->makeDirectory($omenPath, 0755, true);
+            $this->line('✅ Created app/Omen/ directory');
         }
 
         if (!$this->files->isDirectory($toolsPath)) {
             $this->files->makeDirectory($toolsPath, 0755, true);
-            $this->line('✅ Created app/Agent/Tools/ directory');
+            $this->line('✅ Created app/Omen/Tools/ directory');
         }
     }
 
     protected function createBootstrapFile(): void
     {
-        $bootstrapPath = base_path('bootstrap/agent.php');
+        $bootstrapPath = base_path('bootstrap/omen.php');
 
         if ($this->files->exists($bootstrapPath)) {
-            if (!$this->confirm('bootstrap/agent.php already exists. Overwrite?', false)) {
+            if (!$this->confirm('bootstrap/omen.php already exists. Overwrite?', false)) {
                 return;
             }
         }
 
         $stub = $this->getBootstrapStub();
         $this->files->put($bootstrapPath, $stub);
-        $this->line('✅ Created bootstrap/agent.php');
+        $this->line('✅ Created bootstrap/omen.php');
     }
 
     protected function createReadFileToolStub(): void
     {
-        $toolPath = base_path('app/Agent/Tools/ReadFile.php');
+        $toolPath = base_path('app/Omen/Tools/ReadFile.php');
 
         if ($this->files->exists($toolPath)) {
-            if (!$this->confirm('app/Agent/Tools/ReadFile.php already exists. Overwrite?', false)) {
+            if (!$this->confirm('app/Omen/Tools/ReadFile.php already exists. Overwrite?', false)) {
                 return;
             }
         }
 
         $stub = $this->getReadFileToolStub();
         $this->files->put($toolPath, $stub);
-        $this->line('✅ Created app/Agent/Tools/ReadFile.php');
+        $this->line('✅ Created app/Omen/Tools/ReadFile.php');
     }
 
     protected function getBootstrapStub(): string
@@ -211,7 +211,7 @@ class ChatCommand extends Command
 
 use Omen\Agent;
 use Omen\Model;
-use App\Agent\Tools\ReadFile;
+use App\Omen\Tools\ReadFile;
 
 return Agent::configure()
     ->withModel(Model::Anthropic, 'claude-3-5-sonnet-20241022')
@@ -228,7 +228,7 @@ PHP;
         return <<<'PHP'
 <?php
 
-namespace App\Agent\Tools;
+namespace App\Omen\Tools;
 
 use Omen\Tool;
 use Omen\Attributes\Description;
@@ -257,7 +257,7 @@ PHP;
 
     protected function loadTools(): void
     {
-        $toolsPath = base_path('app/Agent/Tools');
+        $toolsPath = base_path('app/Omen/Tools');
         if (!is_dir($toolsPath)) {
             return;
         }
@@ -266,7 +266,7 @@ PHP;
         $files = glob($toolsPath . '/*.php');
 
         foreach ($files as $file) {
-            $className = 'App\\Agent\\Tools\\' . basename($file, '.php');
+            $className = 'App\\Omen\\Tools\\' . basename($file, '.php');
 
             if (class_exists($className)) {
                 try {
