@@ -7,7 +7,7 @@ use Illuminate\Filesystem\Filesystem;
 
 class InstallCommand extends Command
 {
-    protected $signature = 'omen:install';
+    protected $signature = 'agent:install';
     protected $description = 'Install Omen AI agent framework';
 
     protected Filesystem $files;
@@ -32,7 +32,7 @@ class InstallCommand extends Command
         $this->newLine();
         $this->comment('Next steps:');
         $this->line('1. Add your ANTHROPIC_API_KEY to your .env file');
-        $this->line('2. Run: php artisan omen');
+        $this->line('2. Run: php artisan agent');
         $this->line('3. Create custom tools in app/Agent/Tools/');
     }
 

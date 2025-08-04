@@ -7,7 +7,7 @@ use Omen\Agent;
 
 class ChatCommand extends Command
 {
-    protected $signature = 'omen';
+    protected $signature = 'agent';
     protected $description = 'Start a chat session with your AI agent';
 
     protected Agent $agent;
@@ -23,7 +23,7 @@ class ChatCommand extends Command
         $configFile = base_path('bootstrap/agent.php');
         if (!file_exists($configFile)) {
             $this->error('❌ No agent configuration found.');
-            $this->comment('Run "php artisan omen:install" first to set up your agent.');
+            $this->comment('Run "php artisan agent:install" first to set up your agent.');
             return 1;
         }
 
